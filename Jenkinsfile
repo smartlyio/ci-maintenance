@@ -14,10 +14,9 @@ def getSlaves() {
 
 def runDockerCleanup() {
   sh "docker container prune -f"
-  sh 'docker images --filter "dangling=true" | grep -e "\\(weeks\\|mongths\\)" > dangling-docker-images.txt'
-  sh 'docker images | grep -e "\\(pena\\|distillery\\|smartlyv1\\)" | grep -e "\\(weeks\\|mongths\\)" > smartly-images.txt'
+  sh 'docker images --filter "dangling=true" | { grep -e "\\(weeks\\|mongths\\)" || true; } > dangling-docker-images.txt'
+  sh 'docker images | { grep -e "\\(pena\\|distillery\\|smartlyv1\\)" || true; } | { grep -e "\\(weeks\\|mongths\\)" || true; } > smartly-images.txt'
   sh script: 'docker rmi "$(cat dangling-docker-images.txt smartly-images.txt | uniq | awk \'{ print $3 }\')"', returnStatus: true
-  sh 'rm dangling-docker-images.txt smartly-images.txt'
 }
 
 properties([
@@ -32,14 +31,14 @@ for (String slave : getSlaves()) {
   // Create a closure for each slave and put it in the map of jobs
   jobs[slave] = {
     node(slave) {
-      runDockerCleanup
+      runDockerCleanup()
     }
   }
 }
 
 jobs['master'] = {
   node('master') {
-    runDockerCleanup
+    runDockerCleanup()
   }
 }
 
