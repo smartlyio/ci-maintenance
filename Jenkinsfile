@@ -14,9 +14,9 @@ def getSlaves() {
 
 def runDockerCleanup() {
   sh "docker container prune -f"
-  sh 'docker images --filter "dangling=true" | { grep -e "\\(weeks\\|mongths\\)" || true; } > dangling-docker-images.txt'
+  sh 'docker image prune -f'
   sh 'docker images | { grep -e "\\(pena\\|distillery\\|smartlyv1\\)" || true; } | { grep -e "\\(weeks\\|mongths\\)" || true; } > smartly-images.txt'
-  sh script: 'docker rmi "$(cat dangling-docker-images.txt smartly-images.txt | uniq | awk \'{ print $3 }\')"', returnStatus: true
+  sh 'cat smartly-images.txt | awk \'{ print $3 }\' | uniq | xargs docker rmi -f | true'
 }
 
 properties([
