@@ -31,20 +31,18 @@ for (String slave : getSlaves()) {
   // Create a closure for each slave and put it in the map of jobs
   jobs[slave] = {
     node(slave) {
-      stage("Docker Cleanup: Slave") {
-        runDockerCleanup()
-      }
+      runDockerCleanup()
     }
   }
 }
 
 jobs['master'] = {
   node('master') {
-    stage('Docker Cleanup: Master') {
-      runDockerCleanup()
-    }
+    runDockerCleanup()
   }
 }
 
 // Run the closures in parallel
-parallel jobs
+stage('Docker Cleanup') {
+  parallel jobs
+}
