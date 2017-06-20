@@ -6,7 +6,7 @@
 @NonCPS
 def getSlaves() {
     def slaves = []
-    hudson.model.Hudson.instance.slaves.each {
+    jenkins.model.Jenkins.instance.slaves.each {
         slaves << it.name
     }
     return slaves
