@@ -29,8 +29,8 @@ getSlaves().each {
     jobs[slave] = {
         node(slave) {
             sh "docker container prune -f"
-            sh 'docker images --filter "dangling=true" | grep -e "\(weeks\|mongths\)" > dangling-docker-images.txt'
-            sh 'docker images | grep -e "\(pena\|distillery\|smartlyv1\)" | grep -e "\(weeks\|mongths\)" > smartly-images.txt'
+            sh 'docker images --filter "dangling=true" | grep -e "\\(weeks\\|mongths\\)" > dangling-docker-images.txt'
+            sh 'docker images | grep -e "\\(pena\\|distillery\\|smartlyv1\\)" | grep -e "\\(weeks\\|mongths\\)" > smartly-images.txt'
             sh script: 'docker rmi "$(cat dangling-docker-images.txt smartly-images.txt | uniq | awk \'{ print $3 }\')"', returnStatus: true
             sh 'rm dangling-docker-images.txt smartly-images.txt'
         }
