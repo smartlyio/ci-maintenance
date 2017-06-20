@@ -31,14 +31,18 @@ for (String slave : getSlaves()) {
   // Create a closure for each slave and put it in the map of jobs
   jobs[slave] = {
     node(slave) {
-      runDockerCleanup()
+      stage("Docker Cleanup: ${slave}") {
+        runDockerCleanup()
+      }
     }
   }
 }
 
 jobs['master'] = {
   node('master') {
-    runDockerCleanup()
+    stage('Docker Cleanup: Master') {
+      runDockerCleanup()
+    }
   }
 }
 
