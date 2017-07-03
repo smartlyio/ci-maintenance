@@ -20,7 +20,7 @@ def runDockerCleanup() {
 
 properties([
   [$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', daysToKeepStr: '7']],
-  pipelineTriggers([cron('H 4 * * *')]),
+  pipelineTriggers([cron('H H/2 * * *')]),
 ])
 
 // Run a command on each slave in parallel
