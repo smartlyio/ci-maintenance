@@ -13,9 +13,10 @@ def getSlaves() {
 }
 
 def runDockerCleanup() {
-  sh "docker network prune -f || true"
+  sh "yes | docker network prune || true"
   sh 'docker images | { grep -e "\\(pena\\|distillery\\|smartlyv1\\)" || true; } | { grep -e "\\(weeks\\|months\\)" || true; } > smartly-images.txt'
   sh "cat smartly-images.txt | awk '{ print \$3 }' | uniq | xargs docker rmi -f || true"
+  sh "yes | docker system prune || true"
 }
 
 properties([
