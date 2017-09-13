@@ -13,15 +13,15 @@ def getSlaves() {
 }
 
 def runDockerCleanup() {
-  sh "yes | docker network prune || true"
+  sh "docker network prune -f || true"
   sh 'docker images | { grep -e "\\(pena\\|distillery\\|smartlyv1\\)" || true; } | { grep -e "\\(weeks\\|months\\)" || true; } > smartly-images.txt'
   sh "cat smartly-images.txt | awk '{ print \$3 }' | uniq | xargs docker rmi -f || true"
-  sh "yes | docker system prune || true"
+  sh "docker system prune --volumes -f || true"
 }
 
 properties([
   [$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', daysToKeepStr: '7']],
-  pipelineTriggers([cron('H H/2 * * *')]),
+  pipelineTriggers([cron('H H/8 * * *')]),
 ])
 
 // Run a command on each slave in parallel
