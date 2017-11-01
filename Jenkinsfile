@@ -15,6 +15,7 @@ def getSlaves() {
 def runDockerCleanup() {
   sh 'docker images | { grep -e "\\(weeks\\|months\\)" || true; } > smartly-images.txt'
   sh "cat smartly-images.txt | awk '{ print \$3 }' | uniq | xargs docker rmi -f || true"
+  sleep(5)
   sh "docker system prune --volumes -f || true"
 }
 
